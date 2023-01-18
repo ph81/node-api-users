@@ -11,6 +11,7 @@ exports.index = function(req, res) {
 // Create user
 exports.new = function (req, res) {
     let user = new User();
+    user.userId = req.body.userId ? req.body.userId : user.userId;
     user.name = req.body.name ? req.body.name : user.name;
     user.email = req.body.email ? req.body.email : req.body.email;
     user.avatar = req.body.avatar ? req.body.avatar : req.body.avatar;
@@ -29,7 +30,7 @@ exports.new = function (req, res) {
 // view user info
 exports.view = async function (req, res) {
     try {
-      const data = await User.findOne({"_id": req.params.user_id});
+      const data = await User.findOne({userId: req.params.userId});
       res.json(data);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -38,7 +39,7 @@ exports.view = async function (req, res) {
 
 // update user info
 exports.update = function (req, res) {
-    User.findOne({"_id": req.params.user_id}, function (err, user) {
+    User.findOne({userId: req.params.userId}, function (err, user) {
         if (err)
             res.send(err);
         user.name = req.body.name ? req.body.name : user.name;
