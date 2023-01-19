@@ -10,11 +10,13 @@ exports.index = function (req, res) {
 
 // Create user
 exports.new = function (req, res) {
+  console.log(req.body);
   let user = new User();
   user.userId = req.body.userId ? req.body.userId : user.userId;
   user.name = req.body.name ? req.body.name : user.name;
   user.email = req.body.email ? req.body.email : user.email;
   user.avatar = req.body.avatar ? req.body.avatar : user.avatar;
+  console.log(user)
 
   //saving user and checking for errors
   user.save(function (err) {
