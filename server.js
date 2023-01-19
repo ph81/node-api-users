@@ -1,21 +1,21 @@
 // Import express
-const express = require("express");
+let express = require("express");
 // Import Body parser
-const bodyParser = require("body-parser");
+let bodyParser = require("body-parser");
 // Import Mongoose
-const mongoose = require("mongoose");
+let mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const cors = require("cors");
+let cors = require("cors");
 require("dotenv").config();
 const dbUrl = process.env.MONGO_URI;
 // Initialize the app
-const app = express();
+let app = express();
 
 //enables cors
 app.use(cors());
 
 // Import routes
-const apiRoutes = require("./api-routes");
+let apiRoutes = require("./api-routes");
 
 // Configure bodyparser to handle post requests
 app.use(
@@ -25,8 +25,11 @@ app.use(
 );
 app.use(bodyParser.json());
 
+
+// Connect to database
 // Connect to Mongoose and set connection variable
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
+
 mongoose.Promise = global.Promise;
 mongoose.connection
   .on("connected", () => {

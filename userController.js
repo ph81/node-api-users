@@ -8,7 +8,7 @@ exports.index = function (req, res) {
     .then((data) => res.status(200).json(data));
 };
 
-// Create book
+// Create user
 exports.new = function (req, res) {
   let user = new User();
   user.userId = req.body.userId ? req.body.userId : user.userId;
@@ -26,7 +26,7 @@ exports.new = function (req, res) {
   });
 };
 
-// Handle view book info
+// Handle view user info
 exports.view = async function (req, res) {
   try {
     const data = await User.findOne({userId: req.params.userId});
