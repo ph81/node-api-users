@@ -58,7 +58,10 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 // Serve Swagger UI at /api-docs
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, (req, res, next) => {
+  req.url = req.url === "/" ? "/index.html" : req.url; 
+  swaggerUi.setup(swaggerSpec)(req, res, next);
+});
 
 // Setup server port
 let port = process.env.PORT || 8080;
