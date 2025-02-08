@@ -8,16 +8,21 @@ const dotenv = require("dotenv");
 let cors = require("cors");
 require("dotenv").config();
 const dbUrl = process.env.MONGO_URI;
+
+// Swagger config
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+
 // Initialize the app
 let app = express();
 
-//enables cors
+// Enables CORS
 app.use(cors());
 
 // Import routes
 let apiRoutes = require("./api-routes");
 
-// Configure bodyparser to handle post requests
+// Configure body-parser to handle POST requests
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -25,9 +30,7 @@ app.use(
 );
 app.use(bodyParser.json());
 
-
 // Connect to database
-// Connect to Mongoose and set connection variable
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 
 mongoose.Promise = global.Promise;
@@ -39,16 +42,35 @@ mongoose.connection
     console.log(`Connection error: ${err.message}`);
   });
 
+// Swagger setup
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "My API",
+      version: "1.0.0",
+      description: "API documentation for my Express.js app",
+    },
+  },
+  apis: ["./api-routes.js"], // Points to your API route file
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Serve Swagger UI at /api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Setup server port
 let port = process.env.PORT || 8080;
 
-// Send message for default URL
+// Default route
 app.get("/", (req, res) => res.send("Hello World with Express"));
 
-// Use Api routes in the App
+// Use API routes
 app.use("/api", apiRoutes);
 
-// Launch app to listen to specified port
+// Launch app
 app.listen(port, function () {
   console.log("Running server on port " + port);
+  console.log(`Swagger Docs: http://localhost:${port}/api-docs`);
 });
